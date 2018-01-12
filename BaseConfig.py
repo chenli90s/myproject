@@ -13,6 +13,10 @@
 
 class BaseConfig:
 
+
+    # 触发类型
+    launch_type = 'active'
+
     # 设定事件类型
     event_type = 'test_event'
     # 定时任务触发时间
@@ -30,4 +34,26 @@ class BaseConfig:
 
 
     def is_active(self):
+        """
+        被动触发的条件，如果满足执行的条件，返回一组算法需要的参数
+        :return:
+        """
         pass
+
+    def get_data(self):
+        """
+        当算法程序运行之前会被调用，返回的值传入算法运行方法里
+        :return:
+        """
+        print('get_data', self.event_type)
+        return 'data'
+
+    def process_result(self, result):
+        """
+        处理算法程序产生的结果
+        :param result:
+        :return:
+        """
+        print('process_result',result)
+
+

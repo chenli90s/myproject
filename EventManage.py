@@ -1,11 +1,11 @@
 # coding: utf-8
 from BaseConfig import BaseConfig
 from threading import Thread
-from alogEngine import Event
-import time
+from EventEngine import Event
 import pytz
 
 tz = pytz.timezone("Asia/Shanghai")
+
 
 class EventManage:
 
@@ -33,7 +33,7 @@ class EventManage:
         #     return
 
         if algo_config.event_type in self.__configs:
-            self.__configs[algo_config.event_type].count +=1
+            self.__configs[algo_config.event_type].count += 1
         else:
             algo_config.count = 1
             self.__configs[algo_config.event_type] = algo_config
@@ -46,7 +46,7 @@ class EventManage:
         """
         if algo_config.event_type in self.__configs:
             if algo_config.count > 1:
-                algo_config.count -=1
+                algo_config.count -= 1
             else:
                 del self.__configs[algo_config.event_type]
 
@@ -57,8 +57,9 @@ class EventManage:
         """
         while self.is_active:
             for _, config in self.__configs.iteritems():
-                if config.is_active():
-                    event = Event(type=config.event_type, config=config)
+                params = config.is_active()
+                if params:
+                    event = Event(type=config.event_type, params=params)
                     self.__event_engine.put(event)
 
     # def _timer_run(self):
@@ -81,7 +82,6 @@ class EventManage:
         self.is_active = False
         self._active_thread.join()
         # self._timer_thread.join()
-
 
 
 if __name__ == '__main__':

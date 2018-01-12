@@ -2,36 +2,7 @@
 import uuid
 from threading import Thread
 from apscheduler.schedulers.background import BackgroundScheduler
-from wrapper import watch_instance_param
-
-class Params:
-
-    instance_id = '0000'
-
-    def __init__(self, instance_id, param_dict):
-        self.__param = param_dict
-        self.set_id(instance_id)
-
-    @classmethod
-    def set_id(cls, id):
-        cls.instance_id = id
-    # def __getitem__(self, item):
-    #     return self.__param[item]
-    #
-    # @watch_instance_param
-    # def __setitem__(self, key, value, instance_id=instance_id):
-    #     self.__param[key] = value
-    #
-    def __getattr__(self, item):
-        return self.__param[item]
-
-    @watch_instance_param
-    def __setattr__(self, key, value, instance_id=instance_id):
-        try:
-            self.__param[key] = value
-        except:
-            pass
-
+from wrapper import Params
 
 class AlgoInstanceManage:
 
@@ -48,11 +19,12 @@ class AlgoInstanceManage:
         :param event:
         :return:
         """
-        alog_instance_id = str(uuid.uuid1())
+        alog_instance_id = str(uuid.uuid4())
+        # print('生成的id为%s'%alog_instance_id)
         event.instance_id = alog_instance_id
-
+        event.params = Params(alog_instance_id, event.params)
         if algo.config.event_type == 'scheduler':
-            cron_list = algo.config.cron.split('')
+            cron_list = algo.config.cron.split()
             self._scheduler.add_job(algo.run, args=event, trigger='cron', minute=cron_list[0],
                                           hour=cron_list[1],
                                           day=cron_list[2],
@@ -80,10 +52,15 @@ class AlgoInstanceManage:
 
 
 if __name__ == '__main__':
-    item = Params('123', {'a':3, 'b':5})
+    # item = Params('123', {'a':3, 'b':5})
     # item2 = Params('125', {'a':3, 'b':5})
     # item.set_attr('a', 8)
     # item['a'] = 'ssssss'
     # item2['b'] = 'eeeee'
-    item.abc = 'sss'
+    # print(item.a)
+    # item.abc = 'sss'
+
     # print(item['a'])
+    for i in range(10):
+        alog_instance_id = str(uuid.uuid4())
+        print('生成的id为%s' % alog_instance_id)

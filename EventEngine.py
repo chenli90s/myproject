@@ -11,6 +11,11 @@ class Event:
         self.kwargs = kwargs
 
 
+    def __getattr__(self, item):
+        return self.kwargs[item]
+
+
+
 class EventEngine:
 
     def __init__(self, algo_Instance_manage):
@@ -47,7 +52,7 @@ class EventEngine:
         if event.type in self.__handlers:
             # [handler(event) for handler in self.__handlers[event.type]]
             for handler in self.__handlers[event.type]:
-                pass
+                self._algo_Instance_manage.add_algo_instance(handler, event)
 
     def start(self):
         """

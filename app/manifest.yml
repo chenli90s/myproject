@@ -1,0 +1,8 @@
+# 应用名
+algo_name: baseapp
+
+# 应用配置
+algoconfig: baseconfig
+# 应用参数类
+algoparam: baseparam
+
